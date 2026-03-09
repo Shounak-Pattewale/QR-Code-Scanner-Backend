@@ -88,6 +88,10 @@ def setup_logging():
 # ---------------------------------------------------------------------------
 
 def create_app():
+    # Setup logging when the factory is called — runs under both
+    # gunicorn (which imports create_app) and direct python app.py
+    setup_logging()
+
     app = Flask(__name__)
 
     # Allow the frontend (port 5000) to call this API (port 5001)
@@ -102,8 +106,6 @@ def create_app():
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    setup_logging()
-
     logger = logging.getLogger(__name__)
     logger.info("Starting decoder app on port 5001")
     logger.info("Log level: %s", os.environ.get("LOG_LEVEL", "INFO"))
